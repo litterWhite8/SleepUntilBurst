@@ -1,0 +1,4 @@
+name: sleepUntilBurst
+version: '${project.version}'
+main: org.white.sleepuntilburst.SleepUntilBurst
+api-version: '1.20'
