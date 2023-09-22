@@ -7,25 +7,23 @@ import java.util.*;
 
 public class RandomAction {
 
-    private DreamBuilder dreamBuilder = new DreamBuilder();
+    private final DreamBuilder dreamBuilder = new DreamBuilder();
 
     private static Map<String,String> record = new HashMap<>();
-    private DreamParser dreamParser = new DreamParser();
+
 
     private  Dream GetRandomDream(String userName) {
         int totalWeight = 0;
-        List<Dream> dreams = dreamParser.getDream();
+        List<Dream> dreams = new ArrayList<>(DreamParser.getDreamChecked());
         record.putIfAbsent(userName, "bad-1");
         String type = record.get(userName).split("-")[0];
         int count = Integer.parseInt(record.get(userName).split("-")[1]);
 
-        if (dreams != null) {
-            for (Dream obj : dreams) {
-                if(obj.getType().equals(type)){
-                    obj.reduceWeights((10-count*2)*0.1f);//减少连续好梦或连续噩梦的概率
-                }
-                totalWeight += obj.getWeight();
+        for (Dream obj : dreams) {
+            if (obj.getType().equals(type)) {
+                obj.reduceWeights((10 - count * 2) * 0.1f);//减少连续好梦或连续噩梦的概率
             }
+            totalWeight += obj.getWeight();
         }
         Random random = new Random();
         int randomWeight = random.nextInt(totalWeight);
