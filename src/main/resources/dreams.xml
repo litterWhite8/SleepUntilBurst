@@ -1,0 +1,34 @@
+
+<dreams>
+    <dream name="diamond" type="good" weight="10" des="给你一个钻石">
+        <event type="give" term="diamond" count="3"/>
+    </dream>
+
+    <dream name="zombie" type="bad" weight="10" des="给你三只僵尸">
+        <event type="entity" term="zombie" count="3"/>
+    </dream>
+
+    <dream name="exp" type="good" weight="10" des="给你10点经验">
+        <event type="exp"  count="10"/>
+    </dream>
+
+    <dream name="blind" type="bad" weight="10" des="瞎眼吧">
+        <event type="potion" term="blindness" sec="10" count="1"/>
+    </dream>
+
+    <dream name="boom" type="bad" weight="10" des="你要炸了">
+        <event type="boom" sec="1" count="4"/>
+    </dream>
+
+    <dream name="lightning" type="bad" weight="10" des="批你的雷正在路上">
+        <event type="lightning" sec="1" count="2"/>
+    </dream>
+
+    <dream name="night" type="bad" weight="10" des="关灯咯">
+        <event type="command" command="time set night"/>
+    </dream>
+
+    <dream name="boat" type="bad" weight="10" des="给你点">
+        <event type="command" command="give Sleeper minecraft:acacia_boat"/>
+    </dream>
+</dreams>
