@@ -19,14 +19,6 @@ public class DreamEvent {
     public DreamEvent() {
     }
 
-    public DreamEvent(String eventType, Integer count, String eventContent, String command, Integer sec) {
-        this.eventType = eventType;
-        this.count = count;
-        this.eventContent = eventContent;
-        this.command = command;
-        this.sec = sec;
-    }
-
     public String getEventType() {
         return eventType;
     }

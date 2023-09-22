@@ -2,8 +2,6 @@ package org.white.sleepuntilburst.unit;
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -18,9 +16,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class DreamParser {
-    private String getPath(){
-        return Objects.requireNonNull(this.getClass().getClassLoader().getResource("dreams.xml")).getFile();
-    }
 
     public List<Dream> getDream() {
         try{

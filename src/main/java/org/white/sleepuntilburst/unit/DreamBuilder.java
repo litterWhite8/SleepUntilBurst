@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -88,10 +87,11 @@ public class DreamBuilder {
     private void commandExecute(String command,Player player){
         String[] ss = command.split("Sleeper");
         if(ss.length > 1){
-            command = ss[0];
-            for (int i = 1;i < ss.length;i++){
-                command += player.getName() + ss[i];
+            StringBuilder commandBuilder = new StringBuilder(ss[0]);
+            for (int i = 1; i < ss.length; i++){
+                commandBuilder.append(player.getName()).append(ss[i]);
             }
+            command = commandBuilder.toString();
         }
         System.out.println(command);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);

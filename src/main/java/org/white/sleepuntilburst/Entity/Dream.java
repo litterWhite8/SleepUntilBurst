@@ -36,9 +36,6 @@ public class Dream {
         return dreamEventList;
     }
 
-    public void setDreamEventList(List<DreamEvent> dreamEventList) {
-        this.dreamEventList = dreamEventList;
-    }
     public String getName() {
         return name;
     }
