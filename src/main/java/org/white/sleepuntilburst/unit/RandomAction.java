@@ -1,72 +1,58 @@
 package org.white.sleepuntilburst.unit;
 
 import org.bukkit.entity.Player;
+import org.white.sleepuntilburst.Entity.Dream;
 
 import java.util.*;
 
 public class RandomAction {
-    private static final Random random = new Random();
-    private final List<WeightedMethod> weightedMethods = new ArrayList<>();
 
-    public void performRandomAction(Player player) {
-        GoodDream goodDream = new GoodDream();
-        BadDream badDream = new BadDream();
-        // 添加方法并设置权重
-        addMethod(new WeightedMethod(() -> goodDream.giveIronForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveGoldForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveExperienceForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveDiamondForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveHeroOfTheVillageEffect(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveGoldenAppleForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveSomePotionForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.giveHarmForPlayer(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.spawnVillager(player), 33));
-        addMethod(new WeightedMethod(() -> goodDream.spawnWanderingTrader(player), 33));
+    private DreamBuilder dreamBuilder = new DreamBuilder();
 
-        addMethod(new WeightedMethod(() -> badDream.spawnZombie(player), 33));
-        addMethod(new WeightedMethod(() -> badDream.giveSlowDiggingEffect(player), 33));
+    private static Map<String,String> record = new HashMap<>();
+    private DreamParser dreamParser = new DreamParser();
 
-        // 随机调用一个方法
-        callRandomMethod();
-    }
+    private  Dream GetRandomDream(String userName) {
+        int totalWeight = 0;
+        List<Dream> dreams = dreamParser.getDream();
+        record.putIfAbsent(userName, "bad-1");
+        String type = record.get(userName).split("-")[0];
+        int count = Integer.parseInt(record.get(userName).split("-")[1]);
 
-    // 添加带有权重的方法
-    public void addMethod(WeightedMethod method) {
-        weightedMethods.add(method);
-    }
-
-    // 随机调用一个方法
-    public void callRandomMethod() {
-        // 权重总和
-        int totalWeight = weightedMethods.stream().mapToInt(WeightedMethod::getWeight).sum();
-
-        // 随机选择一个方法
-        int randomIndex = random.nextInt(totalWeight);
-        int currentIndex = 0;
-
-        for (WeightedMethod method : weightedMethods) {
-            currentIndex += method.getWeight();
-            if (randomIndex < currentIndex) {
-                method.getMethod().run(); // 调用选中的方法
-                break;
+        if (dreams != null) {
+            for (Dream obj : dreams) {
+                if(obj.getType().equals(type)){
+                    obj.reduceWeights((10-count*2)*0.1f);//减少连续好梦或连续噩梦的概率
+                }
+                totalWeight += obj.getWeight();
             }
         }
+        Random random = new Random();
+        int randomWeight = random.nextInt(totalWeight);
+        int currentIndex = 0;
+        for (Dream obj : dreams) {
+            currentIndex += obj.getWeight();
+            if (randomWeight < currentIndex) {
+                return obj;
+            }
+        }
+        return null;
     }
-    private static class WeightedMethod {
-        private final Runnable method;
-        private final int weight;
 
-        public WeightedMethod(Runnable method, int weight) {
-            this.method = method;
-            this.weight = weight;
-        }
+    public void performRandomAction(Player player) {
+        String playerName = player.getName();
+        Dream dream = GetRandomDream(playerName);
 
-        public Runnable getMethod() {
-            return method;
+        String type = record.get(playerName).split("-")[0];
+        int count = Integer.parseInt(record.get(playerName).split("-")[1]);
+        if(dream.getType().equals(type)){
+            record.put(playerName,type + "-" + (count + 1));
+        }else{
+            record.put(playerName,type.equals("good") ? "bad-1" : "good-1");
         }
+        dreamBuilder.buildDream(dream,player);
+        player.sendActionBar(dream.getDes());
 
-        public int getWeight() {
-            return weight;
-        }
     }
+
 }
